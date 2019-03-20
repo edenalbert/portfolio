@@ -1,4 +1,4 @@
-#include "connectFour.h"
+//#include "connectFour.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -6,8 +6,10 @@
 //external variables
 int rows;
 int columns;
+int i;
+int j;
 
-////uhhh idk if this is right
+////uhhh idk if this is right---orginalprint board but i hate it now
 /*
 void printBoard(int rows, int columns){
   int i,j;
@@ -50,6 +52,8 @@ void printMenue(){
 
   while (1) {
     scanf("%d", &menueChoice);
+    //lolololol this doesnt word if it is a letter!
+    //need to fix that
       if( (menueChoice != 1) && (menueChoice != 2) && (menueChoice != 3) ){
         printf("The number you have selected is invalid. Please try again.\n");
       }
@@ -77,8 +81,31 @@ void printMenue(){
   return;
 }
 
-void printBoard2(char board[], int sizeofArray){
-
+void printBoard(char board[rows][columns], int rows, int columns){
+  int k;
+  int sizeofArray = columns * rows;
+  for(i=0; i<rows; i++){
+    printf("|"); //prints right edge
+    for(j=0; j< columns ; j++ ){
+       printf(" %c |",board[i][j]);
+     }
+     printf("\n");
+  }
+  //prints column numbers on the bottom
+  if( columns < 10){
+  for(j=1; j< (columns+1) ; j++ ){
+     printf("  %d ",j);
+   }
+  }
+  else{
+    for(j=1; j< 11 ; j++ ){
+       printf("  %d ",j);
+     }
+     for(j=11; j< (columns+1) ; j++ ){
+        printf(" %d ",j);
+      }
+  }
+  printf("\n");
   return;
 }
 
@@ -102,12 +129,17 @@ int main(){
   }
     printf("Board size is %d rows and %d columns.", rows, columns);
   printMenue();
-  char board[rows*columns];
+  char board[rows][columns];
   int n;
-  n = sizeof(board);
-  printf("%d\n", n);
-  printBoard( rows, columns );
-  printBoard2( board, (rows*columns) );
+  //n = sizeof(board); test statement
+  //printf("%d\n", n); test statement
+  //for loops fills array with - ,so players know that spot is empty
+  for(i=0; i<rows; i++){
+    for(j=0; j< columns ; j++ ){
+        board[i][j] = '-';
+    }
+  }
+  printBoard( board, rows, columns);
   //choose who goes first function
 
   printf("hey\n");
