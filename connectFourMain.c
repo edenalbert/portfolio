@@ -92,12 +92,13 @@ void printBoard(char board[rows][columns]){
 }
 
 int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction){
-  printf("2\n");
+
   char playerPiece = board[rowIndex][colIndex];
   //checking to the left of piece inserted
-  if(direction == 8){  //had to make this direction 8 because i dont think the parameters liked a stand alone 1
-    if(colIndex == 0){  //reached left side of the board
+  if(direction == 1){  //had to make this direction 8 because i dont think the parameters liked a stand alone 1
+
       printf("3\n");
+    if(colIndex == 0){  //reached left side of the board
       if( board[rowIndex][colIndex]== playerPiece){
         return 1; //don't need to run recursion because we are on the edge and there's no where to go !!
       }
@@ -109,7 +110,7 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction){
     else{
       if(board[rowIndex][colIndex-1]== playerPiece){
         colIndex = colIndex-1;
-        return 1 + inRow(board, rowIndex, colIndex, 8);
+        return 1 + inRow(board, rowIndex, colIndex, 1);
       }
       else{
         return 0;
@@ -130,8 +131,8 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction){
     }
     else{
       if(board[rowIndex][colIndex+1]== playerPiece){
-      //  colIndex = colIndex+1;
-        return 1 + inRow(board, rowIndex, colIndex+1, 2);
+        colIndex = colIndex+1;
+        return 1 + inRow(board, rowIndex, colIndex, 2);
       }
       else{
         return 0;
@@ -150,16 +151,11 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction){
       }
     }
     else{
-      printf("a\n");
-      printf("%d", rowIndex);
-      printf("    %d\n",colIndex);
       if(board[rowIndex+1][colIndex] == playerPiece){
-        printf("b\n");
         rowIndex = rowIndex+1;
         return 1 + inRow(board, rowIndex, colIndex, 3);
       }
       else{
-        printf("c\n");
         return 0;
       }
     }
@@ -252,25 +248,25 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction){
       }
     }
   }
-  printf("oh no\n");
 return 0;
 }
 
 int checkWinner(char board[rows][columns], int numberOfTurns, int rowIndex, int colIndex){
 
   //no way there could be a connect four when the sum of the players moves dont equal more than 7
+  //4 moves by player 1 + 3 moves by player2
   //so just return
-  if(numberOfTurns < 6){
-    printf("1\n");
-    return 0;
-  }
+  //if(numberOfTurns < 6){
+    //printf("1\n");
+    //return 0;
+  //}
 
-  int horizontalInRow = inRow(board, rowIndex, colIndex, 8) + inRow(board, rowIndex, colIndex, 2) ;
+  int horizontalInRow = inRow(board, rowIndex, colIndex, 1) + inRow(board, rowIndex, colIndex, 2) ;
   int verticalInRow = inRow(board, rowIndex, colIndex,  3) ;
   int bottomLeftToTopRight =  inRow(board, rowIndex, colIndex , 4) + inRow(board, rowIndex, colIndex, 5);
   int topLeftToBottomRight =  inRow(board, rowIndex, colIndex , 6) + inRow(board, rowIndex, colIndex, 7);
 
-  if( horizontalInRow >= 4 || verticalInRow >=4 || bottomLeftToTopRight>=4 ){
+  if( horizontalInRow >= 4 || verticalInRow >= 4 || bottomLeftToTopRight >= 4 ){
     return 1; //someone won!
   }
   else{
@@ -280,11 +276,32 @@ int checkWinner(char board[rows][columns], int numberOfTurns, int rowIndex, int 
 }
 
 
-/*int AI(char board[rows][columns], int parent, int cols, int depth, int color  ){
-  int scoreOfBoard = score(board);
+/*
+int AICheck(char board[rows][columns], int rowIndex, int colIndex, int answerArray[]){
 
-}*/
+  int horizontalInRowAI = inRow(board, rowIndex, colIndex, 8) + inRow(board, rowIndex, colIndex, 2) ;
+  int verticalInRowAI = inRow(board, rowIndex, colIndex,  3) ;
+  int bottomLeftToTopRightAI =  inRow(board, rowIndex, colIndex , 4) + inRow(board, rowIndex, colIndex, 5);
+  int topLeftToBottomRightAI =  inRow(board, rowIndex, colIndex , 6) + inRow(board, rowIndex, colIndex, 7);
 
+  if( horizontalInRowAI == 3 ){
+    return 1; //computer or player 1 is about to win
+  }
+  if( verticalInRowAIn == 3 ){
+    return 2; //computer or player 1 is about to win
+  }
+  if( bottomLeftToTopRightAI == 3 ){
+    return 3; //computer or player 1 is about to win
+  }
+  if( topLeftToBottomRightAI == 3 ){
+    return 4; //computer or player 1 is about to win
+  }
+  else{
+  return 0; //no winning happenging here
+  }
+
+}
+*/
 
 
 int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
@@ -309,9 +326,6 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
               if( board[i][columnDrop] == '-' && board[i][columnDrop] != 'o'){
                 board[i][columnDrop] = 'x';
                 printBoard( board);
-                printf("a\n");
-                printf("Row:  %d", i);
-                printf("        column #: %d\n",columnDrop);
                 gameStautus = checkWinner( board, numberOfTurns, i, columnDrop);
                 printf("\n");
                 return gameStautus;
@@ -336,19 +350,73 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
           if( board[i][columnDrop] == '-' && board[i][columnDrop] != 'x'){
             board[i][columnDrop] = 'o';
             printBoard( board);
-            printf("a\n");
-            printf("Row:  %d", i);
-            printf("        column #: %d\n",columnDrop);
             gameStautus = checkWinner( board, numberOfTurns, i, columnDrop);
             return gameStautus;
           }
         }
       }
     }
+/*
+  else{
+    int possibleWin;
+    //check to see where computer could win
+    //this is the most important move the computer could make
+    //so it is the first thing looked for since it could end the game
+    for(int c = 0; c<columns; c++){
+      for(int r = 0; r<rows; r++){
+        if(board[r][c] == 'o'){ //lets check if Mr.Robot can win there
+          possibleWin = AICheck(board, r, c, possibleWin);
+          if(possibleWin == 1){
+            //horiztonal win, need to figure out to place left or right
+            board[r][c] = 'o';
+            printBoard( board);
+            gameStautus = 1;
+            printf("\n");
+            return gameStautus;
+          }
+          if(possibleWin == 2){
+            //vertical win, just place one row above
+            board[r-1][c] = 'o';
+            printBoard( board);
+            gameStautus = 1;
+            printf("\n");
+            return gameStautus;
+          }
+          if(possibleWin == 3){
+            //diangonal win bottom left top right win , no no idea lolololololololololol
+            board[r][c] = 'o';
+            printBoard( board);
+            gameStautus = 1;
+            printf("\n");
+            return gameStautus;
+          }
+          if(possibleWin == 4){
+            //diangonal top left bottom right win, no no idea lolololololololololol
+            board[r][c] = 'o';
+            printBoard( board);
+            gameStautus = 1;
+            printf("\n");
+            return gameStautus;
+          }
+        }
+      }
+    }
 
-  /*else{
-    // calculate the column the computer should drop down using the Negamax algorithm
-    int columnDrop = AI(currentBoard, -1, columnDrop, getDepth(), 1);
+    //check to see where player 1 could win
+    for(int c = 0; c<columns; c++){
+      for(int r = 0; r<rows; r++){
+        if(board[r][c]=='x'){//lets check if player 1 is about to win there
+        possibleWin = AICheck(board, r, c);
+          if(possibleWin == 1){
+            board[r][c] = 'o';
+            printBoard( board);
+            gameStautus = checkWinner( board, numberOfTurns, i, columnDrop);
+            printf("\n");
+            return gameStautus;
+          }
+        }
+      }
+    }
 
     for( i= (rows - 1) ; i >= 0; i-- ){
         if( board[i][columnDrop] == '-' && board[i][columnDrop] != 'x'){
@@ -361,7 +429,8 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
       }
     return 0;
   }*/
-}
+  }
+return 0;
 }
 
 
