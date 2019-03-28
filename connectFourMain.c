@@ -91,15 +91,13 @@ void printBoard(char board[rows][columns]){
   return;
 }
 
-int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction){
+int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction, char piece){
 
-  char playerPiece = board[rowIndex][colIndex];
   //checking to the left of piece inserted
   if(direction == 1){  //had to make this direction 8 because i dont think the parameters liked a stand alone 1
-
       printf("3\n");
     if(colIndex == 0){  //reached left side of the board
-      if( board[rowIndex][colIndex]== playerPiece){
+      if( board[rowIndex][colIndex]== piece){
         return 1; //don't need to run recursion because we are on the edge and there's no where to go !!
       }
       else{
@@ -108,9 +106,9 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction){
     }
     //no edge, just else statment because if edge, we'd go into first if statment
     else{
-      if(board[rowIndex][colIndex-1]== playerPiece){
+      if(board[rowIndex][colIndex]== piece){
         colIndex = colIndex-1;
-        return 1 + inRow(board, rowIndex, colIndex, 1);
+        return 1 + inRow(board, rowIndex, colIndex , 1, piece);
       }
       else{
         return 0;
@@ -122,7 +120,7 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction){
   if(direction == 2){
       printf("4\n");
     if(colIndex == (columns-1) ){  //reached right  side of the board
-      if( board[rowIndex][colIndex]== playerPiece){
+      if( board[rowIndex][colIndex]== piece){
         return 1;
       }
       else{
@@ -130,9 +128,9 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction){
       }
     }
     else{
-      if(board[rowIndex][colIndex+1]== playerPiece){
+      if(board[rowIndex][colIndex]== piece){
         colIndex = colIndex+1;
-        return 1 + inRow(board, rowIndex, colIndex, 2);
+        return 1 + inRow(board, rowIndex, colIndex, 2, piece);
       }
       else{
         return 0;
@@ -143,7 +141,7 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction){
   if(direction == 3){
       printf("5\n");
     if(rowIndex == (rows-1) ){  //reached bottom of the board
-      if( board[rowIndex][colIndex]== playerPiece){
+      if( board[rowIndex][colIndex]== piece){
         return 1;
       }
       else{
@@ -151,9 +149,9 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction){
       }
     }
     else{
-      if(board[rowIndex+1][colIndex] == playerPiece){
+      if(board[rowIndex][colIndex] == piece){
         rowIndex = rowIndex+1;
-        return 1 + inRow(board, rowIndex, colIndex, 3);
+        return 1 + inRow(board, rowIndex, colIndex, 3, piece);
       }
       else{
         return 0;
@@ -164,7 +162,7 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction){
   if(direction == 4){
       printf("6\n");
     if( (rowIndex == (rows-1)) || (colIndex == 0) ){ //reached either the bottom or left edge of the board
-      if( board[rowIndex][colIndex]== playerPiece){
+      if( board[rowIndex][colIndex]== piece){
         return 1;
       }
       else{
@@ -172,10 +170,10 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction){
       }
     }
     else{
-      if(board[rowIndex+1][colIndex-1]== playerPiece){
+      if(board[rowIndex][colIndex]== piece){
         rowIndex = rowIndex+1;
         colIndex = colIndex-1;
-        return 1 + inRow(board, rowIndex, colIndex, 4);
+        return 1 + inRow(board, rowIndex, colIndex, 4, piece);
       }
       else{
         return 0;
@@ -186,7 +184,7 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction){
   if(direction == 5){
       printf("7\n");
     if( (rowIndex == 0) || (colIndex == (columns-1)) ){ //reached either the top or right edge of the board
-      if( board[rowIndex][colIndex]== playerPiece){
+      if( board[rowIndex][colIndex]== piece){
         return 1;
       }
       else{
@@ -194,10 +192,10 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction){
       }
     }
     else{
-      if(board[rowIndex-1][colIndex+1]== playerPiece){
+      if(board[rowIndex][colIndex]== piece){
         rowIndex = rowIndex-1;
         colIndex = colIndex+1;
-        return 1 + inRow(board, rowIndex, colIndex, 5);
+        return 1 + inRow(board, rowIndex, colIndex, 5, piece);
       }
       else{
         return 0;
@@ -208,7 +206,7 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction){
   if(direction == 6){
       printf("8\n");
     if( (rowIndex == 0) || (colIndex == 0) ){ //reached either the top or left edge of the board
-      if( board[rowIndex][colIndex]== playerPiece){
+      if( board[rowIndex][colIndex]== piece){
         return 1;
       }
       else{
@@ -216,10 +214,10 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction){
       }
     }
     else{
-      if(board[rowIndex-1][colIndex-1]== playerPiece){
+      if(board[rowIndex][colIndex]== piece){
         rowIndex = rowIndex-1;
         colIndex = colIndex-1;
-        return 1 + inRow(board, rowIndex, colIndex, 6);
+        return 1 + inRow(board, rowIndex, colIndex, 6, piece);
       }
       else{
         return 0;
@@ -229,8 +227,8 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction){
   //checking BOTTOM RIGHT from index
   if(direction == 7){
       printf("9\n");
-    if( (rowIndex == (rows-1)) || (colIndex == (columns-1)) ){ //reached either the bottom or right edge of the board
-      if( board[rowIndex][colIndex]== playerPiece){
+    if( (rowIndex == (rows-1)) || (colIndex == (columns-1)) ){ //in bottom right hand corner or right edge of board or bottom of board
+      if( board[rowIndex][colIndex]== piece){
         return 1;
       }
       else{
@@ -238,10 +236,10 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction){
       }
     }
     else{
-      if(board[rowIndex-1][colIndex+1]== playerPiece){
-        rowIndex = rowIndex-1;
+      if(board[rowIndex][colIndex]== piece){
+        rowIndex = rowIndex+1;
         colIndex = colIndex+1;
-        return 1 + inRow(board, rowIndex, colIndex, 7);
+        return 1 + inRow(board, rowIndex, colIndex, 7, piece);
       }
       else{
         return 0;
@@ -261,12 +259,14 @@ int checkWinner(char board[rows][columns], int numberOfTurns, int rowIndex, int 
     //return 0;
   //}
 
-  int horizontalInRow = inRow(board, rowIndex, colIndex, 1) + inRow(board, rowIndex, colIndex, 2) ;
-  int verticalInRow = inRow(board, rowIndex, colIndex,  3) ;
-  int bottomLeftToTopRight =  inRow(board, rowIndex, colIndex , 4) + inRow(board, rowIndex, colIndex, 5);
-  int topLeftToBottomRight =  inRow(board, rowIndex, colIndex , 6) + inRow(board, rowIndex, colIndex, 7);
+  char playerPiece = board[rowIndex][colIndex];
 
-  if( horizontalInRow >= 4 || verticalInRow >= 4 || bottomLeftToTopRight >= 4 ){
+  int horizontalInRow = (inRow(board, rowIndex, colIndex, 1, playerPiece) + inRow(board, rowIndex, colIndex, 2, playerPiece)) -1 ;
+  int verticalInRow = (inRow(board, rowIndex, colIndex,  3, playerPiece)) - 1;
+  int bottomLeftToTopRight =  (inRow(board, rowIndex, colIndex , 4, playerPiece) + inRow(board, rowIndex, colIndex, 5, playerPiece)) -1;
+  int topLeftToBottomRight =  (inRow(board, rowIndex, colIndex , 6, playerPiece) + inRow(board, rowIndex, colIndex, 7, playerPiece)) -1;
+
+  if( horizontalInRow ==4 || verticalInRow == 4 || bottomLeftToTopRight == 4 || topLeftToBottomRight == 4){
     return 1; //someone won!
   }
   else{
