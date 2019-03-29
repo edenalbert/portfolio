@@ -249,15 +249,7 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction, 
 return 0;
 }
 
-int checkWinner(char board[rows][columns], /*int numberOfTurns,*/ int rowIndex, int colIndex){
-
-  //no way there could be a connect four when the sum of the players moves dont equal more than 7
-  //4 moves by player 1 + 3 moves by player2
-  //so just return
-  //if(numberOfTurns < 6){
-    //printf("1\n");
-    //return 0;
-  //}
+int checkWinner(char board[rows][columns], int rowIndex, int colIndex){
 
   char playerPiece = board[rowIndex][colIndex];
 
@@ -274,28 +266,6 @@ int checkWinner(char board[rows][columns], /*int numberOfTurns,*/ int rowIndex, 
   }
 
 }
-
-
-/*
-int AICheck(char board[rows][columns], int rowIndex, int colIndex ){
-  char playerPiece = board[rowIndex][colIndex];
-
-  int horizontalInRowAI = inRow(board, rowIndex, colIndex, 1, playerPiece) + inRow(board, rowIndex, colIndex, 2) ;
-  int verticalInRowAI = inRow(board, rowIndex, colIndex,  3,playerPiece) ;
-  int bottomLeftToTopRightAI =  inRow(board, rowIndex, colIndex , 4,playerPiece) + inRow(board, rowIndex, colIndex, 5);
-  int topLeftToBottomRightAI =  inRow(board, rowIndex, colIndex , 6,playerPiece) + inRow(board, rowIndex, colIndex, 7);
-
-  if( horizontalInRow ==4 || verticalInRow == 4 || bottomLeftToTopRight == 4 || topLeftToBottomRight == 4){
-    return 1; //someone won!
-  }
-  else{
-  return 0; //keep playing
-  }
-
-
-}*/
-
-
 
 int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
   int columnDrop;
@@ -316,10 +286,10 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
       if( columnDrop <= columns){
         columnDrop = columnDrop -1; //zero index
           for( int i= (rows - 1) ; i >= 0; i-- ){
-              if( board[i][columnDrop] == '-' && board[i][columnDrop] != 'o'){
+              if( board[i][columnDrop] == '-'){
                 board[i][columnDrop] = 'x';
                 printBoard( board);
-                gameStautus = checkWinner( board, /*numberOfTurns,*/ i, columnDrop);
+                gameStautus = checkWinner( board, i, columnDrop);
                 printf("\n");
                 return gameStautus;
               }
@@ -340,10 +310,10 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
         if( columnDrop <= columns){
           columnDrop = columnDrop -1; //zero index
         for( int i= (rows - 1) ; i >= 0; i-- ){
-          if( board[i][columnDrop] == '-' && board[i][columnDrop] != 'x'){
+          if( board[i][columnDrop] == '-'){
             board[i][columnDrop] = 'o';
             printBoard( board);
-            gameStautus = checkWinner( board, /*numberOfTurns,*/ i, columnDrop);
+            gameStautus = checkWinner( board, i, columnDrop);
             return gameStautus;
           }
         }
@@ -354,49 +324,47 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
     if ( (numberOfTurns % 2 != 0) && playMode ==2){
       int possibleWin;
       printf("Computer's turn.\n");
-      //check to see where computer could win
-      //this is the most important move the computer could make
-      //so it is the first thing looked for since it could end the game
+
+      /*check to see where computer could win this is the most important
+      move the computer could make so it is the first thing looked for
+      since it could end the game*/
       for(int c = 0; c<columns; c++){
         for(int r= (rows - 1) ; r >= 0; r-- ){
-          if( board[r][c] == '-' && board[r][c] != 'x'){
-          //  printf("a\n");
-            /*temporarily puts piece there to see if putting a piece there causes a win
-            if a win happens, keep piece there. Else, set piece back to -, which means
-            space is open. */
-            board[r][c] = 'o';
-            possibleWin = checkWinner(board, r, c);
-            if(possibleWin == 1){
-              printBoard( board);
-              printf("\n");
-              return possibleWin; //can return possible win back as 1 becasue computer wins here if we drop a piece while in this function
-            }
-            else{
-            //  printf("b\n");
-              board[r][c] = '-';
+          if( board[r][c] == '-'){
+            if(board[r+1][c]!= '-'){
+              board[r][c] = 'o';
+              possibleWin = checkWinner(board, r, c);
+              if(possibleWin == 1){ //computer wins somehwere
+                printBoard( board);
+                printf("\n");
+                return possibleWin;
+              }
+              else{//computer doesnt win
+                board[r][c] = '-';
+              }
             }
           }
           //check to see where player 1 could win
           //second most important move the computer could make
           //because if the computer doesn't take that spot, player 1
           //will win and the game is over.
-          if( board[r][c] == '-' && board[r][c] != 'o'){
-            board[r][c] = 'x';
-          //  printf("c\n");
-            possibleWin = checkWinner(board, r, c);
-            if(possibleWin == 1){
-              board[r][c] = 'o'; //replace the x that triggered a win with an x
-              printBoard( board);
-              printf("\n");
-              return 0;
-            }
-            else{
-            //  printf("d\n");
-              board[r][c] = '-';
+          if( board[r][c] == '-' /*&& board[r][c] != 'o'*/){
+              if(board[r+1][c]!= '-'){
+                board[r][c] = 'x';
+                possibleWin = checkWinner(board, r, c);
+                if(possibleWin == 1){
+                  board[r][c] = 'o'; //replace the x that triggered a win with an x
+                  printBoard( board);
+                  printf("\n");
+                  return 0;
+                }
+                else{
+                  board[r][c] = '-';
+                }
+              }
             }
           }
-        }
-      }
+      }   
       //next best move is taking squares in the middle
       //if player 1 or computer can't win
       int middleCol = floor(columns/2);
