@@ -29,7 +29,7 @@ int printMenue(){
   printf(" 2 - Play against computer\n");
   printf(" 3 - How to Play\n");
   printf(" 4 - Exit\n");
-  printf("\n=========================================\n\n");
+  printf("\n=========================================\n");
 
   while (1) {
     scanf("%d", &menueChoice);
@@ -44,12 +44,12 @@ int printMenue(){
     }
 
     if( menueChoice == 1){
-      printf("You have choosen two player mode.\n");
+      printf("\nYou have choosen two player mode.\n");
       printf("Player 1 will be 'x'\nPlayer 2 will be 'o'\n");
       return menueChoice;
     }
     if( menueChoice == 2){
-      printf("You have choosen to play agsinst the computer.\n");
+      printf("\nYou have choosen to play agsinst the computer.\n");
       printf("You will be 'x'\nThe computer will be 'o'\n");
       return menueChoice;
     }
@@ -95,7 +95,7 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction, 
 
   //checking to the left of piece inserted
   if(direction == 1){  //had to make this direction 8 because i dont think the parameters liked a stand alone 1
-      printf("3\n");
+    //  printf("3\n");
     if(colIndex == 0){  //reached left side of the board
       if( board[rowIndex][colIndex]== piece){
         return 1; //don't need to run recursion because we are on the edge and there's no where to go !!
@@ -118,7 +118,7 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction, 
 
   //checking to the right of piece inserted
   if(direction == 2){
-      printf("4\n");
+    //  printf("4\n");
     if(colIndex == (columns-1) ){  //reached right  side of the board
       if( board[rowIndex][colIndex]== piece){
         return 1;
@@ -139,7 +139,7 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction, 
   }
   //checking down from a piece, Vertical Check
   if(direction == 3){
-      printf("5\n");
+    //  printf("5\n");
     if(rowIndex == (rows-1) ){  //reached bottom of the board
       if( board[rowIndex][colIndex]== piece){
         return 1;
@@ -160,7 +160,7 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction, 
   }
   //checking from BOTTOM LEFT from index
   if(direction == 4){
-      printf("6\n");
+    //  printf("6\n");
     if( (rowIndex == (rows-1)) || (colIndex == 0) ){ //reached either the bottom or left edge of the board
       if( board[rowIndex][colIndex]== piece){
         return 1;
@@ -182,7 +182,7 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction, 
   }
   //checking TOP RIGHT from index
   if(direction == 5){
-      printf("7\n");
+    //  printf("7\n");
     if( (rowIndex == 0) || (colIndex == (columns-1)) ){ //reached either the top or right edge of the board
       if( board[rowIndex][colIndex]== piece){
         return 1;
@@ -204,7 +204,7 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction, 
   }
   //checking TOP LEFT from index
   if(direction == 6){
-      printf("8\n");
+    //  printf("8\n");
     if( (rowIndex == 0) || (colIndex == 0) ){ //reached either the top or left edge of the board
       if( board[rowIndex][colIndex]== piece){
         return 1;
@@ -226,7 +226,7 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction, 
   }
   //checking BOTTOM RIGHT from index
   if(direction == 7){
-      printf("9\n");
+  //    printf("9\n");
     if( (rowIndex == (rows-1)) || (colIndex == (columns-1)) ){ //in bottom right hand corner or right edge of board or bottom of board
       if( board[rowIndex][colIndex]== piece){
         return 1;
@@ -249,7 +249,7 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction, 
 return 0;
 }
 
-int checkWinner(char board[rows][columns], int numberOfTurns, int rowIndex, int colIndex){
+int checkWinner(char board[rows][columns], /*int numberOfTurns,*/ int rowIndex, int colIndex){
 
   //no way there could be a connect four when the sum of the players moves dont equal more than 7
   //4 moves by player 1 + 3 moves by player2
@@ -262,7 +262,7 @@ int checkWinner(char board[rows][columns], int numberOfTurns, int rowIndex, int 
   char playerPiece = board[rowIndex][colIndex];
 
   int horizontalInRow = (inRow(board, rowIndex, colIndex, 1, playerPiece) + inRow(board, rowIndex, colIndex, 2, playerPiece)) -1 ;
-  int verticalInRow = (inRow(board, rowIndex, colIndex,  3, playerPiece)) - 1;
+  int verticalInRow = inRow(board, rowIndex, colIndex,  3, playerPiece);
   int bottomLeftToTopRight =  (inRow(board, rowIndex, colIndex , 4, playerPiece) + inRow(board, rowIndex, colIndex, 5, playerPiece)) -1;
   int topLeftToBottomRight =  (inRow(board, rowIndex, colIndex , 6, playerPiece) + inRow(board, rowIndex, colIndex, 7, playerPiece)) -1;
 
@@ -277,31 +277,24 @@ int checkWinner(char board[rows][columns], int numberOfTurns, int rowIndex, int 
 
 
 /*
-int AICheck(char board[rows][columns], int rowIndex, int colIndex, int answerArray[]){
+int AICheck(char board[rows][columns], int rowIndex, int colIndex ){
+  char playerPiece = board[rowIndex][colIndex];
 
-  int horizontalInRowAI = inRow(board, rowIndex, colIndex, 8) + inRow(board, rowIndex, colIndex, 2) ;
-  int verticalInRowAI = inRow(board, rowIndex, colIndex,  3) ;
-  int bottomLeftToTopRightAI =  inRow(board, rowIndex, colIndex , 4) + inRow(board, rowIndex, colIndex, 5);
-  int topLeftToBottomRightAI =  inRow(board, rowIndex, colIndex , 6) + inRow(board, rowIndex, colIndex, 7);
+  int horizontalInRowAI = inRow(board, rowIndex, colIndex, 1, playerPiece) + inRow(board, rowIndex, colIndex, 2) ;
+  int verticalInRowAI = inRow(board, rowIndex, colIndex,  3,playerPiece) ;
+  int bottomLeftToTopRightAI =  inRow(board, rowIndex, colIndex , 4,playerPiece) + inRow(board, rowIndex, colIndex, 5);
+  int topLeftToBottomRightAI =  inRow(board, rowIndex, colIndex , 6,playerPiece) + inRow(board, rowIndex, colIndex, 7);
 
-  if( horizontalInRowAI == 3 ){
-    return 1; //computer or player 1 is about to win
-  }
-  if( verticalInRowAIn == 3 ){
-    return 2; //computer or player 1 is about to win
-  }
-  if( bottomLeftToTopRightAI == 3 ){
-    return 3; //computer or player 1 is about to win
-  }
-  if( topLeftToBottomRightAI == 3 ){
-    return 4; //computer or player 1 is about to win
+  if( horizontalInRow ==4 || verticalInRow == 4 || bottomLeftToTopRight == 4 || topLeftToBottomRight == 4){
+    return 1; //someone won!
   }
   else{
-  return 0; //no winning happenging here
+  return 0; //keep playing
   }
 
-}
-*/
+
+}*/
+
 
 
 int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
@@ -326,7 +319,7 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
               if( board[i][columnDrop] == '-' && board[i][columnDrop] != 'o'){
                 board[i][columnDrop] = 'x';
                 printBoard( board);
-                gameStautus = checkWinner( board, numberOfTurns, i, columnDrop);
+                gameStautus = checkWinner( board, /*numberOfTurns,*/ i, columnDrop);
                 printf("\n");
                 return gameStautus;
               }
@@ -350,87 +343,92 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
           if( board[i][columnDrop] == '-' && board[i][columnDrop] != 'x'){
             board[i][columnDrop] = 'o';
             printBoard( board);
-            gameStautus = checkWinner( board, numberOfTurns, i, columnDrop);
-            return gameStautus;
-          }
-        }
-      }
-    }
-/*
-  else{
-    int possibleWin;
-    //check to see where computer could win
-    //this is the most important move the computer could make
-    //so it is the first thing looked for since it could end the game
-    for(int c = 0; c<columns; c++){
-      for(int r = 0; r<rows; r++){
-        if(board[r][c] == 'o'){ //lets check if Mr.Robot can win there
-          possibleWin = AICheck(board, r, c, possibleWin);
-          if(possibleWin == 1){
-            //horiztonal win, need to figure out to place left or right
-            board[r][c] = 'o';
-            printBoard( board);
-            gameStautus = 1;
-            printf("\n");
-            return gameStautus;
-          }
-          if(possibleWin == 2){
-            //vertical win, just place one row above
-            board[r-1][c] = 'o';
-            printBoard( board);
-            gameStautus = 1;
-            printf("\n");
-            return gameStautus;
-          }
-          if(possibleWin == 3){
-            //diangonal win bottom left top right win , no no idea lolololololololololol
-            board[r][c] = 'o';
-            printBoard( board);
-            gameStautus = 1;
-            printf("\n");
-            return gameStautus;
-          }
-          if(possibleWin == 4){
-            //diangonal top left bottom right win, no no idea lolololololololololol
-            board[r][c] = 'o';
-            printBoard( board);
-            gameStautus = 1;
-            printf("\n");
+            gameStautus = checkWinner( board, /*numberOfTurns,*/ i, columnDrop);
             return gameStautus;
           }
         }
       }
     }
 
-    //check to see where player 1 could win
-    for(int c = 0; c<columns; c++){
-      for(int r = 0; r<rows; r++){
-        if(board[r][c]=='x'){//lets check if player 1 is about to win there
-        possibleWin = AICheck(board, r, c);
-          if(possibleWin == 1){
+    //calculate where computer wants to drop piece
+    if ( (numberOfTurns % 2 != 0) && playMode ==2){
+      int possibleWin;
+      printf("Computer's turn.\n");
+      //check to see where computer could win
+      //this is the most important move the computer could make
+      //so it is the first thing looked for since it could end the game
+      for(int c = 0; c<columns; c++){
+        for(int r= (rows - 1) ; r >= 0; r-- ){
+          if( board[r][c] == '-' && board[r][c] != 'x'){
+          //  printf("a\n");
+            /*temporarily puts piece there to see if putting a piece there causes a win
+            if a win happens, keep piece there. Else, set piece back to -, which means
+            space is open. */
             board[r][c] = 'o';
-            printBoard( board);
-            gameStautus = checkWinner( board, numberOfTurns, i, columnDrop);
-            printf("\n");
-            return gameStautus;
+            possibleWin = checkWinner(board, r, c);
+            if(possibleWin == 1){
+              printBoard( board);
+              printf("\n");
+              return possibleWin; //can return possible win back as 1 becasue computer wins here if we drop a piece while in this function
+            }
+            else{
+            //  printf("b\n");
+              board[r][c] = '-';
+            }
+          }
+          //check to see where player 1 could win
+          //second most important move the computer could make
+          //because if the computer doesn't take that spot, player 1
+          //will win and the game is over.
+          if( board[r][c] == '-' && board[r][c] != 'o'){
+            board[r][c] = 'x';
+          //  printf("c\n");
+            possibleWin = checkWinner(board, r, c);
+            if(possibleWin == 1){
+              board[r][c] = 'o'; //replace the x that triggered a win with an x
+              printBoard( board);
+              printf("\n");
+              return 0;
+            }
+            else{
+            //  printf("d\n");
+              board[r][c] = '-';
+            }
+          }
+        }
+      }
+      //next best move is taking squares in the middle
+      //if player 1 or computer can't win
+      int middleCol = floor(columns/2);
+      if(board[0][(middleCol-1)] == '-'){
+        for( int r= (rows - 1) ; r >= 0; r-- ){
+            if( board[r][middleCol] == '-' && board[r][middleCol] != 'x'){
+              board[r][middleCol] = 'o';
+              printBoard( board);
+              printf("\n");
+              return 0;
+            }
+          }
+      }
+      //if middlecol is full and theres no where to put a piece
+      //and win, pick a random column.
+      while(1){
+        int col = (rand()%columns);
+        if(board[0][(middleCol-1)] == '-'){
+          for(int b= (rows - 1) ; b >= 0; b-- ){
+            if(board[b][col]=='-' && board[b][col]!= 'x'){
+              board[b][col] = 'o';
+              printBoard( board);
+              printf("\n");
+              return 0;
+            }
           }
         }
       }
     }
 
-    for( i= (rows - 1) ; i >= 0; i-- ){
-        if( board[i][columnDrop] == '-' && board[i][columnDrop] != 'x'){
-          board[i][columnDrop] = '0';
-          printBoard( board);
-          gameStautus = checkWinner( board, numberOfTurns, i, columnDrop);
-          printf("\n");
-          return gameStautus;
-        }
-      }
-    return 0;
-  }*/
+
   }
-return 0;
 }
 
 
@@ -490,11 +488,10 @@ int main(){
 
             if( gameStautus == 1 ){
               if( numberOfTurns % 2 == 0 ){
-                printf("Congratulations Player 1! You won!\n");
+                printf("*********Congratulations Player 1! You won!*********\n\n");
               }
               else{
-              //if( numberOfTurns % 2 != 0 ){
-                printf("Congratulations Player 2! You won!\n");
+                printf("*********Congratulations Player 2! You won!*********\n\n");
               }
               numberOfTurns = (rows * columns) -1 ;
             }
@@ -506,19 +503,20 @@ int main(){
           while( numberOfTurns != (rows * columns) && userInput == 2){
             gameStautus = dropAPiece (board, numberOfTurns, userInput);
             if( gameStautus == 1 ){
-              if( numberOfTurns % 2 == 0 ){
-                printf("Congratulations Player 1! You won!\n");
-              }
-              else{
-              //if( numberOfTurns % 2 != 0 ){
-                printf("Sorry, You Lose!\n");
-              }
-              numberOfTurns = (rows * columns)-1;
+                  if( numberOfTurns % 2 == 0 ){
+                      printf("*********Congratulations Player 1! You won!*********\n\n");
+                    }
+                  else{
+                    printf("*********Sorry, You Lose!*********\n\n");
+                  }
+                  numberOfTurns = (rows * columns)-1;
             }
 
             numberOfTurns = numberOfTurns + 1;
           }
-            printf("There was a tie!");
+          if(numberOfTurns == (rows*columns) && gameStautus==0){
+            printf("*********There was a tie!*********\n\n");
+          }
 
           break;
       }
