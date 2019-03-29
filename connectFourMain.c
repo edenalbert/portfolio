@@ -3,12 +3,13 @@
 #include <stdio.h>
 #include <math.h>
 
+#include<ctype.h>///////////do i need?
+
 //external variables
 int rows;
 int columns;
-
-int numberOfTurns;
-int gameStautus;  // 0 = no winner, 1 = player 1 won, 2 = player2/computer won
+//int numberOfTurns;
+int gameStautus;  // 0 = no winner, 1 = player won
 
 void howToPlay(){
   printf("\n****************DIRECTIONS****************\n");
@@ -21,6 +22,7 @@ void howToPlay(){
   return;
 }
 
+//need to fix scan in
 int printMenue(){
   int menueChoice;
   printf("\n=========================================\n");
@@ -28,43 +30,35 @@ int printMenue(){
   printf(" 1 - Two player game\n");
   printf(" 2 - Play against computer\n");
   printf(" 3 - How to Play\n");
-  printf(" 4 - Exit\n");
+  printf(" 4 - Exit");
   printf("\n=========================================\n");
 
   while (1) {
     scanf("%d", &menueChoice);
-    //lolololol this doesnt work if it is a letter!***************************************************************
-    //need to fix that
-      if( (menueChoice != 1) && (menueChoice != 2) && (menueChoice != 3) && (menueChoice != 4) ){
-        printf("The number you have selected is invalid. Please try again.\n");
-      }
-      else{
-        break;
-      }
-    }
 
     if( menueChoice == 1){
       printf("\nYou have choosen two player mode.\n");
       printf("Player 1 will be 'x'\nPlayer 2 will be 'o'\n");
+      printf("=========================================\n\n");
       return menueChoice;
     }
     if( menueChoice == 2){
       printf("\nYou have choosen to play agsinst the computer.\n");
       printf("You will be 'x'\nThe computer will be 'o'\n");
+      printf("=========================================\n\n");
       return menueChoice;
     }
     if( menueChoice == 3){
       howToPlay();
-      printMenue();
+      return menueChoice;
     }
     if( menueChoice == 4){
       return menueChoice;
     }
-    return menueChoice;
+  }
 }
 
 void printBoard(char board[rows][columns]){
-  int k;
 
   for(int i=0; i<rows; i++){
     printf("|"); //prints right edge
@@ -73,7 +67,9 @@ void printBoard(char board[rows][columns]){
      }
      printf("\n");
   }
-  //prints column numbers on the bottom
+  //prints column numbers after the bottom row. Two for loops because spacing gets
+  //a little weird in 10's place. Didn't worry about 100's because by then
+  //the display will be messed up anyway so who cares :)
   if( columns < 10){
   for(int j=1; j< (columns+1) ; j++ ){
      printf("  %d ",j);
@@ -94,20 +90,19 @@ void printBoard(char board[rows][columns]){
 int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction, char piece){
 
   //checking to the left of piece inserted
-  if(direction == 1){  //had to make this direction 8 because i dont think the parameters liked a stand alone 1
-    //  printf("3\n");
+  if(direction == 1){
     if(colIndex == 0){  //reached left side of the board
       if( board[rowIndex][colIndex]== piece){
-        return 1; //don't need to run recursion because we are on the edge and there's no where to go !!
+        return 1; //don't need to run recursion because we are on the edge so there's no where to go !!
       }
       else{
         return 0;
       }
     }
-    //no edge, just else statment because if edge, we'd go into first if statment
+    //not at an edge
     else{
       if(board[rowIndex][colIndex]== piece){
-        colIndex = colIndex-1;
+        colIndex = colIndex-1; //sets the value we are going to look at in next recursion
         return 1 + inRow(board, rowIndex, colIndex , 1, piece);
       }
       else{
@@ -118,8 +113,7 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction, 
 
   //checking to the right of piece inserted
   if(direction == 2){
-    //  printf("4\n");
-    if(colIndex == (columns-1) ){  //reached right  side of the board
+    if(colIndex == (columns-1) ){  //reached right side of the board
       if( board[rowIndex][colIndex]== piece){
         return 1;
       }
@@ -139,7 +133,6 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction, 
   }
   //checking down from a piece, Vertical Check
   if(direction == 3){
-    //  printf("5\n");
     if(rowIndex == (rows-1) ){  //reached bottom of the board
       if( board[rowIndex][colIndex]== piece){
         return 1;
@@ -160,7 +153,6 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction, 
   }
   //checking from BOTTOM LEFT from index
   if(direction == 4){
-    //  printf("6\n");
     if( (rowIndex == (rows-1)) || (colIndex == 0) ){ //reached either the bottom or left edge of the board
       if( board[rowIndex][colIndex]== piece){
         return 1;
@@ -182,7 +174,6 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction, 
   }
   //checking TOP RIGHT from index
   if(direction == 5){
-    //  printf("7\n");
     if( (rowIndex == 0) || (colIndex == (columns-1)) ){ //reached either the top or right edge of the board
       if( board[rowIndex][colIndex]== piece){
         return 1;
@@ -204,7 +195,6 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction, 
   }
   //checking TOP LEFT from index
   if(direction == 6){
-    //  printf("8\n");
     if( (rowIndex == 0) || (colIndex == 0) ){ //reached either the top or left edge of the board
       if( board[rowIndex][colIndex]== piece){
         return 1;
@@ -226,8 +216,7 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction, 
   }
   //checking BOTTOM RIGHT from index
   if(direction == 7){
-  //    printf("9\n");
-    if( (rowIndex == (rows-1)) || (colIndex == (columns-1)) ){ //in bottom right hand corner or right edge of board or bottom of board
+    if( (rowIndex == (rows-1)) || (colIndex == (columns-1)) ){ //reached either the right edge of board or bottom of board
       if( board[rowIndex][colIndex]== piece){
         return 1;
       }
@@ -267,15 +256,52 @@ int checkWinner(char board[rows][columns], int rowIndex, int colIndex){
 
 }
 
+//need to put more check statments on column drop, is user input >=1 and a character
+//could making the AI smarter, rand put in column is dumb
 int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
   int columnDrop;
 
   while(1){
+    if( numberOfTurns % 2 == 0 || (( (numberOfTurns % 2 != 0) && playMode ==1)) ){
+      if( numberOfTurns % 2 == 0) {
+        printf("Player 1, which column would you like to drop your piece in?\n");
+      }
+      if ( numberOfTurns % 2 != 0 ){
+        printf("Player 2, which column would you like to drop your piece in?\n");
+      }
+      scanf("%d", &columnDrop);
+      if(columnDrop > (columns) || columnDrop <= 0  ){
+        printf("You have entered an invalid input please try again\n");
+      }
+      if( board[0][(columnDrop-1)] != '-'){
+        printf("Error: That column is alread full. \n");
+      }
+      printf("\n");
+      if( columnDrop <= columns){
+        printf("==============================================================\n\n\n\n");
+        columnDrop = columnDrop -1; //zero index
+          for( int i= (rows - 1) ; i >= 0; i-- ){
+            if( board[i][columnDrop] == '-'){
+              if( numberOfTurns % 2 == 0) {
+                board[i][columnDrop] = 'x';
+              }
+              if( numberOfTurns % 2 != 0 ){
+                board[i][columnDrop] = 'o';
+              }
+                printBoard( board);
+                gameStautus = checkWinner( board, i, columnDrop);
+                printf("\n");
+                return gameStautus;
+              }
+            }
+        }
+    }
     //dropping a piece into zero is messed up idkkkk whyyyy im crying
-    if( numberOfTurns % 2 == 0 ){
+    //im a little scared to delete this hahaha :/
+    /*if( numberOfTurns % 2 == 0 ){
       printf("Player 1, which column would you like to drop your piece in?\n");
       scanf("%d", &columnDrop);
-
+      printf("==============================================================\n");
       if(columnDrop > (columns) || columnDrop <= 0  ){
         printf("You have entered an invalid input please try again\n");
       }
@@ -318,16 +344,15 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
           }
         }
       }
-    }
+    }*/
 
     //calculate where computer wants to drop piece
     if ( (numberOfTurns % 2 != 0) && playMode ==2){
       int possibleWin;
       printf("Computer's turn.\n");
 
-      /*check to see where computer could win this is the most important
-      move the computer could make so it is the first thing looked for
-      since it could end the game*/
+      /*check to see where computer could win which is the most important
+      move the computer could make, hence why it is the first thing looked for*/
       for(int c = 0; c<columns; c++){
         for(int r= (rows - 1) ; r >= 0; r-- ){
           if( board[r][c] == '-'){
@@ -344,16 +369,16 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
               }
             }
           }
-          //check to see where player 1 could win
-          //second most important move the computer could make
-          //because if the computer doesn't take that spot, player 1
-          //will win and the game is over.
+          /*check to see where player 1 could win
+          second most important move the computer could make
+          because if the computer doesn't take that spot, player 1
+          will win and the game is over.*/
           if( board[r][c] == '-' /*&& board[r][c] != 'o'*/){
               if(board[r+1][c]!= '-'){
                 board[r][c] = 'x';
                 possibleWin = checkWinner(board, r, c);
                 if(possibleWin == 1){
-                  board[r][c] = 'o'; //replace the x that triggered a win with an x
+                  board[r][c] = 'o'; //replace the x that triggered a win with computer's piece
                   printBoard( board);
                   printf("\n");
                   return 0;
@@ -364,9 +389,9 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
               }
             }
           }
-      }   
-      //next best move is taking squares in the middle
-      //if player 1 or computer can't win
+      }
+      /*next best move is taking squares in the middle
+      if player 1 or computer can't win*/
       int middleCol = floor(columns/2);
       if(board[0][(middleCol-1)] == '-'){
         for( int r= (rows - 1) ; r >= 0; r-- ){
@@ -378,8 +403,8 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
             }
           }
       }
-      //if middlecol is full and theres no where to put a piece
-      //and win, pick a random column.
+      /*if middlecol is full and theres no where to put a piece
+      to win, pick a random column.*/
       while(1){
         int col = (rand()%columns);
         if(board[0][(middleCol-1)] == '-'){
@@ -399,19 +424,19 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
   }
 }
 
-
-
-
-
-int main(){
+//fix scaf statements for size of rows and columns, as well as play another game y/n
+int main() {
     int userInput;
+    int player1Wins=0;
+    int player2Wins=0;
+    int computerWins=0;
 
     //intro screen and getting board size
     printf("\n=========================================\n");
-    printf("Welcome to Connect Four!!\n");
-    printf("Please enter the dimensions you want your board to be\n");
+    printf("******* Welcome to Connect Four!! *******\n\n");
+    printf("Please enter the dimensions you want your board to be.\n");
     printf("Warining: any dimensions larger than 40 x 40 will have unwidely screen handlings\n");
-    printf("Warning: any dimensions smaller than 4 x 4 will be too small to play Connect Four\n");
+    printf("and any dimensions smaller than 4 x 4 will be too small to play Connect Four\n");
     while(1){
       printf("rows:");
       scanf("%d",&rows);
@@ -424,46 +449,50 @@ int main(){
         break;
       }
     }
-
-    printf("Board size is %d rows and %d columns.", rows, columns);
-
-
+    printf("\nBoard size is now %d rows and %d columns.\n", rows, columns);
 
     userInput = printMenue();
 
-    //The real code for this game takes place in this while loop, with
-    //calls to various functions
     while( userInput != 4){
-      numberOfTurns = 0;
+      int numberOfTurns = 0;
+      int whoIsWinner=0;
 
       if( userInput == 3 ){
         userInput = printMenue();
       }
 
-      //sets board
+      //sets board to empty
       char board[rows][columns];
       for(int i=0; i<rows; i++){
         for(int j=0; j< columns ; j++ ){
           board[i][j] = '-';
         }
       }
+      printBoard( board );
 
-        while( userInput == 1 || userInput== 2 ){
-          printBoard( board );
+      /*The actual calls to functions that make the game work happen in
+      this while looop. This whille loop contains two while loops. One
+      for player vs. player, and one for player vs.computer. For each piece
+      that is dropped, a value of 0 or 1 is returned from the drop piece
+      function. This value is then elvalutaed to determine the state of the
+      game.If theres a winner, the numberOfTurns variable is manipulated so
+      the inner while loop is exited. Then players are asked if they would
+      like to play again and score is kepy count of.*/
+      while( userInput == 1 || userInput== 2 ){
           //player vs. player
           while( numberOfTurns != (rows * columns) && userInput == 1){
             gameStautus = dropAPiece (board, numberOfTurns, userInput);
-
             if( gameStautus == 1 ){
               if( numberOfTurns % 2 == 0 ){
                 printf("*********Congratulations Player 1! You won!*********\n\n");
+                whoIsWinner = 1;
               }
               else{
                 printf("*********Congratulations Player 2! You won!*********\n\n");
+                whoIsWinner = 2;
               }
               numberOfTurns = (rows * columns) -1 ;
             }
-
             numberOfTurns = numberOfTurns + 1;
           }
 
@@ -473,15 +502,18 @@ int main(){
             if( gameStautus == 1 ){
                   if( numberOfTurns % 2 == 0 ){
                       printf("*********Congratulations Player 1! You won!*********\n\n");
+                      whoIsWinner = 1;
                     }
                   else{
                     printf("*********Sorry, You Lose!*********\n\n");
+                    whoIsWinner = 3;
                   }
                   numberOfTurns = (rows * columns)-1;
             }
 
             numberOfTurns = numberOfTurns + 1;
           }
+
           if(numberOfTurns == (rows*columns) && gameStautus==0){
             printf("*********There was a tie!*********\n\n");
           }
@@ -489,28 +521,42 @@ int main(){
           break;
       }
 
-      //while loop determining play again
-      while(numberOfTurns == (rows*columns)){
-        int playAgain;
-        printf("Would you like to play again?\n");
-        printf("Please enter 1 for yes or 2 for no\n");
-        scanf("%d", &playAgain);
-        if( playAgain != 1 && playAgain != 2){
-          printf("*****You have entered an invalid input please try again.*****\n\n");
-        }
-        if( playAgain == 2){
-          userInput = 4;
-          break;
-        }
-        if(playAgain == 1){
-          break;
-        }
+      /*The next lines of code deal with deciding to play another game or not
+      and keep tracking of the score of the total matches*/
+      int playAgain;
+      printf("Would you like to play again?\n");
+      printf("Please enter 1 for yes or 2 for no\n");
+      scanf("%d", &playAgain);
+      if( playAgain != 1 && playAgain != 2){
+        printf("*****You have entered an invalid input please try again.*****\n\n");
       }
 
+      if(whoIsWinner == 1){
+        player1Wins++;
+      }
+      if(whoIsWinner == 2){
+        player2Wins++;
+      }
+      if(whoIsWinner == 1){
+        computerWins++;
+      }
+      printf("Total Game Scoreboard\n");
+      printf("Player 1 has won %d games.\n", player1Wins);
+      if (userInput == 1) {
+        printf("Player 2 has won %d games.\n", player2Wins);
+      }
+      if (userInput == 2) {
+        printf("The computer has won %d games.\n", computerWins);
+      }
 
-      printf("\n");
+      if( playAgain == 2){
+        break;
+      }
+      printf("\nNew Game\n");
     }
-  printf("Thank You for Playing!\n");
-  printf("Goodbye!\n");
-	return 0;
+
+    printf("\n");
+    printf("Thank You for Playing!\n");
+    printf("Goodbye!\n");
+    return 0;
 }
