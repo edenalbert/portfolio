@@ -8,7 +8,6 @@
 //external variables
 int rows;
 int columns;
-//int numberOfTurns;
 int gameStautus;  // 0 = no winner, 1 = player won
 
 void howToPlay(){
@@ -22,7 +21,6 @@ void howToPlay(){
   return;
 }
 
-//need to fix scan in
 int printMenue(){
   int menueChoice;
   printf("\n=========================================\n");
@@ -34,15 +32,24 @@ int printMenue(){
   printf("\n=========================================\n");
 
   while (1) {
-    scanf("%d", &menueChoice);
+    long int temp=-1;
+    char tempArray[2000];
+    char *tempPtr;
+    fgets(tempArray, 2000, stdin);
+    temp = strtol (tempArray, &tempPtr, 10);
+    menueChoice = (long)temp;
 
     if( menueChoice == 1){
+
+      printf("=========================================");
       printf("\nYou have choosen two player mode.\n");
       printf("Player 1 will be 'x'\nPlayer 2 will be 'o'\n");
       printf("=========================================\n\n");
       return menueChoice;
     }
     if( menueChoice == 2){
+
+      printf("=========================================");
       printf("\nYou have choosen to play agsinst the computer.\n");
       printf("You will be 'x'\nThe computer will be 'o'\n");
       printf("=========================================\n\n");
@@ -54,6 +61,9 @@ int printMenue(){
     }
     if( menueChoice == 4){
       return menueChoice;
+    }
+    else{
+      printf("Error: Invalid Input. Please Try again\n");
     }
   }
 }
@@ -269,16 +279,19 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
       if ( numberOfTurns % 2 != 0 ){
         printf("Player 2, which column would you like to drop your piece in?\n");
       }
-      scanf("%d", &columnDrop);
-      if(columnDrop > (columns) || columnDrop <= 0  ){
+      long int temp=-1;
+      char tempArray[2000];
+      char *tempPtr;
+      fgets(tempArray, 2000, stdin);
+      temp = strtol (tempArray, &tempPtr, 10);
+      columnDrop = (long)temp;
+      if(columnDrop > (columns) || columnDrop <= 0 || (board[0][(columnDrop-1)] != '-') ){
         printf("You have entered an invalid input please try again\n");
       }
-      if( board[0][(columnDrop-1)] != '-'){
-        printf("Error: That column is alread full. \n");
-      }
+
+
       printf("\n");
       if( columnDrop <= columns){
-        printf("==============================================================\n\n\n\n");
         columnDrop = columnDrop -1; //zero index
           for( int i= (rows - 1) ; i >= 0; i-- ){
             if( board[i][columnDrop] == '-'){
@@ -424,7 +437,6 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
   }
 }
 
-//fix scaf statements for size of rows and columns, as well as play another game y/n
 int main() {
     int userInput;
     int player1Wins=0;
@@ -432,24 +444,36 @@ int main() {
     int computerWins=0;
 
     //intro screen and getting board size
-    printf("\n=========================================\n");
+    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n=========================================\n");
     printf("******* Welcome to Connect Four!! *******\n\n");
     printf("Please enter the dimensions you want your board to be.\n");
-    printf("Warining: any dimensions larger than 40 x 40 will have unwidely screen handlings\n");
-    printf("and any dimensions smaller than 4 x 4 will be too small to play Connect Four\n");
+    printf("**********************************************************************************\n");
+    printf("*Warining: any dimensions larger than 40 x 40 will have unwidely screen handlings*\n");
+    printf("*and any dimensions smaller than 4 x 4 will be too small to play Connect Four.   *\n");
+    printf("**********************************************************************************\n");
     while(1){
-      printf("rows:");
-      scanf("%d",&rows);
-      printf("columns:");
-      scanf("%d",&columns);
+      long int temp=-1;
+      char tempArray[2000];
+      char *tempPtr;
+      printf("Number of Rows:");
+      fgets(tempArray, 2000, stdin);
+      temp = strtol (tempArray, &tempPtr, 10);
+      rows = (long)temp;
+      //scanf("%d%s",&rows);
+      printf("Number of Columns: ");
+      fgets(tempArray, 2000, stdin);
+      temp = strtol (tempArray, &tempPtr, 10);
+      columns = (long)temp;
+
+      //scanf("%d%c",&columns);
       if(rows < 4 || columns < 4){
-        printf("The board size you have entered is too small, please select a larger size\n");
+        printf("The board size you have entered invalid input, please try again.\n");
       }
       else{
         break;
       }
     }
-    printf("\nBoard size is now %d rows and %d columns.\n", rows, columns);
+    printf("\nBoard size is now %d rows by %d columns.\n", rows, columns);
 
     userInput = printMenue();
 
@@ -524,36 +548,47 @@ int main() {
       /*The next lines of code deal with deciding to play another game or not
       and keep tracking of the score of the total matches*/
       int playAgain;
-      printf("Would you like to play again?\n");
-      printf("Please enter 1 for yes or 2 for no\n");
-      scanf("%d", &playAgain);
-      if( playAgain != 1 && playAgain != 2){
-        printf("*****You have entered an invalid input please try again.*****\n\n");
+      while(1){
+        printf("Would you like to play again?\n");
+        printf("Please enter 1 for Yes or 2 for No.\n");
+        long int temp=-1;
+        char tempArray[2000];
+        char *tempPtr;
+        fgets(tempArray, 2000, stdin);
+        temp = strtol (tempArray, &tempPtr, 10);
+        playAgain = (long)temp;
+        if( playAgain != 1 && playAgain != 2){
+          printf("*****ERROR: You have entered an invalid input please try again.*****\n\n");
+        }
+        else{
+          if(whoIsWinner == 1){
+            player1Wins++;
+          }
+          if(whoIsWinner == 2){
+            player2Wins++;
+          }
+          if(whoIsWinner == 1){
+            computerWins++;
+          }
+          printf("      Total Game Scoreboard\n");
+          printf("      ---------------------\n");
+          printf("    Player 1 has won %d games.\n", player1Wins);
+          if (userInput == 1) {
+            printf("    Player 2 has won %d games.\n", player2Wins);
+            break;
+          }
+          if (userInput == 2) {
+            printf("    The computer has won %d games.\n", computerWins);
+            break;
+          }
+        }
       }
-
-      if(whoIsWinner == 1){
-        player1Wins++;
-      }
-      if(whoIsWinner == 2){
-        player2Wins++;
-      }
-      if(whoIsWinner == 1){
-        computerWins++;
-      }
-      printf("Total Game Scoreboard\n");
-      printf("Player 1 has won %d games.\n", player1Wins);
-      if (userInput == 1) {
-        printf("Player 2 has won %d games.\n", player2Wins);
-      }
-      if (userInput == 2) {
-        printf("The computer has won %d games.\n", computerWins);
-      }
-
-      if( playAgain == 2){
-        break;
-      }
-      printf("\nNew Game\n");
+    if( playAgain == 2){
+      break;
     }
+    printf("\nNew Game\n");
+    printf("-----------\n");
+  }
 
     printf("\n");
     printf("Thank You for Playing!\n");
