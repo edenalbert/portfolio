@@ -95,7 +95,7 @@ void printBoard(char **board, int rows, int columns){
   return;
 }
 
-int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction, char piece){
+int inRow(char **board, int rowIndex, int colIndex, int direction, char piece){
 
   //checking to the left of piece inserted
   if(direction == 1){
@@ -246,7 +246,7 @@ int inRow(char board[rows][columns], int rowIndex, int colIndex, int direction, 
 return 0;
 }
 
-int checkWinner(char board[rows][columns], int rowIndex, int colIndex){
+int checkWinner(char **board, int rowIndex, int colIndex){
 
   char playerPiece = board[rowIndex][colIndex];
 
@@ -264,7 +264,7 @@ int checkWinner(char board[rows][columns], int rowIndex, int colIndex){
 
 }
 
-int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode, int rows, int columns){
+int dropAPiece(char **board, int numberOfTurns, int playMode){
   int columnDrop;
 
   while(1){
@@ -312,10 +312,10 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode, int r
 
       /*check to see where computer could win which is the most important
       move the computer could make, hence why it is the first thing looked for*/
-      for(int c = 0; c<columns; c++){
-        for(int r= (rows - 1) ; r >= 0; r-- ){
+      for(int c = 0; c <= columns; c++){
+        for(int r= (rows - 1) ; r > 0; r-- ){
           if( board[r][c] == '-'){
-            if(board[r+1][c]!= '-'){
+             if( (r!= rows-1) && (board[r+1][c]!= '-')){
               board[r][c] = 'o';
               possibleWin = checkWinner(board, r, c);
               if(possibleWin == 1){ //computer wins somehwere
@@ -332,8 +332,9 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode, int r
           second most important move the computer could make
           because if the computer doesn't take that spot, player 1
           will win and the game is over.*/
-          if( board[r][c] == '-' /*&& board[r][c] != 'o'*/){
-              if(board[r+1][c]!= '-'){
+          if( board[r][c] == '-'){
+
+               if( (r!= rows-1) && (board[r+1][c]!= '-')){
                 board[r][c] = 'x';
                 possibleWin = checkWinner(board, r, c);
                 if(possibleWin == 1){
@@ -345,7 +346,7 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode, int r
                 else{
                   board[r][c] = '-';
                 }
-              }
+             }
             }
           }
       }
@@ -517,7 +518,7 @@ int main() {
           if(whoIsWinner == 2){
             player2Wins++;
           }
-          if(whoIsWinner == 1){
+          if(whoIsWinner == 2){
             computerWins++;
           }
           printf("      Total Game Scoreboard\n");
@@ -534,10 +535,16 @@ int main() {
         }
       }
     if( playAgain == 2){
+      for (int i = 0; i < rows; i++) {
+        free(board[i]);
+      }
       break;
     }
     printf("\nNew Game\n");
     printf("-----------\n");
+    for (int i = 0; i < rows; i++) {
+      free(board[i]);
+    }
   }
 
     printf("\n");
