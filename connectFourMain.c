@@ -1,4 +1,4 @@
-//#include "connectFour.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -481,7 +481,7 @@ int main() {
                     }
                   else{
                     printf("*********Sorry, You Lose!*********\n\n");
-                    whoIsWinner = 3;
+                    whoIsWinner = 2;
                   }
                   numberOfTurns = (rows * columns)-1;
             }
@@ -518,9 +518,6 @@ int main() {
           if(whoIsWinner == 2){
             player2Wins++;
           }
-          if(whoIsWinner == 2){
-            computerWins++;
-          }
           printf("      Total Game Scoreboard\n");
           printf("      ---------------------\n");
           printf("    Player 1 has won %d games.\n", player1Wins);
@@ -529,7 +526,7 @@ int main() {
             break;
           }
           if (userInput == 2) {
-            printf("    The computer has won %d games.\n", computerWins);
+            printf("    The computer has won %d games.\n", player2Wins);
             break;
           }
         }
