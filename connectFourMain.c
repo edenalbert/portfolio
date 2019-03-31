@@ -3,8 +3,6 @@
 #include <stdio.h>
 #include <math.h>
 
-#include<ctype.h>///////////do i need?
-
 //external variables
 int rows;
 int columns;
@@ -68,7 +66,7 @@ int printMenue(){
   }
 }
 
-void printBoard(char board[rows][columns]){
+void printBoard(char **board, int rows, int columns){
 
   for(int i=0; i<rows; i++){
     printf("|"); //prints right edge
@@ -266,9 +264,7 @@ int checkWinner(char board[rows][columns], int rowIndex, int colIndex){
 
 }
 
-//need to put more check statments on column drop, is user input >=1 and a character
-//could making the AI smarter, rand put in column is dumb
-int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
+int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode, int rows, int columns){
   int columnDrop;
 
   while(1){
@@ -287,9 +283,8 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
       columnDrop = (long)temp;
       if(columnDrop > (columns) || columnDrop <= 0 || (board[0][(columnDrop-1)] != '-') ){
         printf("You have entered an invalid input please try again\n");
+        continue;
       }
-
-
       printf("\n");
       if( columnDrop <= columns){
         columnDrop = columnDrop -1; //zero index
@@ -301,33 +296,7 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
               if( numberOfTurns % 2 != 0 ){
                 board[i][columnDrop] = 'o';
               }
-                printBoard( board);
-                gameStautus = checkWinner( board, i, columnDrop);
-                printf("\n");
-                return gameStautus;
-              }
-            }
-        }
-    }
-    //dropping a piece into zero is messed up idkkkk whyyyy im crying
-    //im a little scared to delete this hahaha :/
-    /*if( numberOfTurns % 2 == 0 ){
-      printf("Player 1, which column would you like to drop your piece in?\n");
-      scanf("%d", &columnDrop);
-      printf("==============================================================\n");
-      if(columnDrop > (columns) || columnDrop <= 0  ){
-        printf("You have entered an invalid input please try again\n");
-      }
-      if( board[0][(columnDrop-1)] != '-'){
-        printf("Error: That column is alread full. \n");
-      }
-      printf("\n");
-      if( columnDrop <= columns){
-        columnDrop = columnDrop -1; //zero index
-          for( int i= (rows - 1) ; i >= 0; i-- ){
-              if( board[i][columnDrop] == '-'){
-                board[i][columnDrop] = 'x';
-                printBoard( board);
+                printBoard( board, rows, columns );
                 gameStautus = checkWinner( board, i, columnDrop);
                 printf("\n");
                 return gameStautus;
@@ -336,30 +305,7 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
         }
     }
 
-    if ( (numberOfTurns % 2 != 0) && playMode ==1){
-      printf("Player 2, which column would you like to drop your piece in?\n");
-      scanf("%d", &columnDrop);
-        if(columnDrop > columns){
-          printf("You have entered an invalid input please try again\n");
-        }
-        if( board[0][(columnDrop-1)] != '-'){
-          printf("Error: That column is alread full. \n");
-        }
-        printf("\n");
-        if( columnDrop <= columns){
-          columnDrop = columnDrop -1; //zero index
-        for( int i= (rows - 1) ; i >= 0; i-- ){
-          if( board[i][columnDrop] == '-'){
-            board[i][columnDrop] = 'o';
-            printBoard( board);
-            gameStautus = checkWinner( board, i, columnDrop);
-            return gameStautus;
-          }
-        }
-      }
-    }*/
-
-    //calculate where computer wants to drop piece
+    //calculate where the computer wants to drop piece
     if ( (numberOfTurns % 2 != 0) && playMode ==2){
       int possibleWin;
       printf("Computer's turn.\n");
@@ -373,7 +319,7 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
               board[r][c] = 'o';
               possibleWin = checkWinner(board, r, c);
               if(possibleWin == 1){ //computer wins somehwere
-                printBoard( board);
+                printBoard( board, rows, columns );
                 printf("\n");
                 return possibleWin;
               }
@@ -392,7 +338,7 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
                 possibleWin = checkWinner(board, r, c);
                 if(possibleWin == 1){
                   board[r][c] = 'o'; //replace the x that triggered a win with computer's piece
-                  printBoard( board);
+                  printBoard( board, rows, columns );
                   printf("\n");
                   return 0;
                 }
@@ -410,7 +356,7 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
         for( int r= (rows - 1) ; r >= 0; r-- ){
             if( board[r][middleCol] == '-' && board[r][middleCol] != 'x'){
               board[r][middleCol] = 'o';
-              printBoard( board);
+              printBoard( board, rows, columns );
               printf("\n");
               return 0;
             }
@@ -424,7 +370,7 @@ int dropAPiece(char board[rows][columns], int numberOfTurns, int playMode){
           for(int b= (rows - 1) ; b >= 0; b-- ){
             if(board[b][col]=='-' && board[b][col]!= 'x'){
               board[b][col] = 'o';
-              printBoard( board);
+              printBoard( board, rows, columns );
               printf("\n");
               return 0;
             }
@@ -485,14 +431,18 @@ int main() {
         userInput = printMenue();
       }
 
+      char **board = malloc ( sizeof(char *) * rows);
+      for(int a=0; a<rows; a++){
+        board[a] = malloc(sizeof(char)* columns);
+      }
       //sets board to empty
-      char board[rows][columns];
+      //char board[rows][columns];
       for(int i=0; i<rows; i++){
         for(int j=0; j< columns ; j++ ){
           board[i][j] = '-';
         }
       }
-      printBoard( board );
+      printBoard(board, rows, columns );
 
       /*The actual calls to functions that make the game work happen in
       this while looop. This whille loop contains two while loops. One
