@@ -413,10 +413,9 @@ int main() {
     int userInput;
     int player1Wins=0;
     int player2Wins=0;
-    int computerWins=0;
 
     //intro screen and getting board size
-    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n=========================================\n");
+    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n=========================================\n");
     printf("******* Welcome to Connect Four!! *******\n\n");
     printf("Please enter the dimensions you want your board to be.\n");
     printf("**********************************************************************************\n");
