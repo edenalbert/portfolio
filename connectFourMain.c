@@ -455,6 +455,9 @@ int main() {
       if( userInput == 3 ){
         userInput = printMenue();
       }
+      if(userInput == 4 ){
+        break;
+      }
 
       char **board = malloc ( sizeof(char *) * rows);
       for(int a=0; a<rows; a++){
@@ -522,6 +525,7 @@ int main() {
 
       /*The next lines of code deal with deciding to play another game or not
       and keep tracking of the score of the total matches*/
+
       int playAgain;
       while(1){
         printf("Would you like to play again?\n");
