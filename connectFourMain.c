@@ -7,7 +7,7 @@
 int rows;
 int columns;
 int gameStautus;  // 0 = no winner, 1 = player won
-
+//this function prints out directions on how to play
 void howToPlay(){
   printf("\n****************DIRECTIONS****************\n");
   printf("Connect four is a fairly simple game.\n");
@@ -18,7 +18,8 @@ void howToPlay(){
   printf("*******************************************\n\n");
   return;
 }
-
+//this function prints out the game manue, asks the user for their input, and
+//then sends their selection back to main.
 int printMenue(){
   int menueChoice;
   printf("\n=========================================\n");
@@ -66,6 +67,7 @@ int printMenue(){
   }
 }
 
+//This function print the game board
 void printBoard(char **board, int rows, int columns){
 
   for(int i=0; i<rows; i++){
@@ -255,7 +257,7 @@ int checkWinner(char **board, int rowIndex, int colIndex){
   int bottomLeftToTopRight =  (inRow(board, rowIndex, colIndex , 4, playerPiece) + inRow(board, rowIndex, colIndex, 5, playerPiece)) -1;
   int topLeftToBottomRight =  (inRow(board, rowIndex, colIndex , 6, playerPiece) + inRow(board, rowIndex, colIndex, 7, playerPiece)) -1;
 
-  if( horizontalInRow ==4 || verticalInRow == 4 || bottomLeftToTopRight == 4 || topLeftToBottomRight == 4){
+  if( horizontalInRow >= 4 || verticalInRow >= 4 || bottomLeftToTopRight >= 4 || topLeftToBottomRight >= 4){
     return 1; //someone won!
   }
   else{
