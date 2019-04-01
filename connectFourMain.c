@@ -315,6 +315,18 @@ int dropAPiece(char **board, int numberOfTurns, int playMode){
       for(int c = 0; c <= columns; c++){
         for(int r= (rows - 1) ; r > 0; r-- ){
           if( board[r][c] == '-'){
+            if( r == rows-1 ){
+              board[r][c] = 'o';
+              possibleWin = checkWinner(board, r, c);
+              if(possibleWin == 1){
+                printBoard( board, rows, columns );
+                printf("\n");
+                return 0;
+              }
+              else{
+                board[r][c] = '-';
+              }
+            }
              if( (r!= rows-1) && (board[r+1][c]!= '-')){
               board[r][c] = 'o';
               possibleWin = checkWinner(board, r, c);
@@ -333,6 +345,19 @@ int dropAPiece(char **board, int numberOfTurns, int playMode){
           because if the computer doesn't take that spot, player 1
           will win and the game is over.*/
           if( board[r][c] == '-'){
+              if( r == rows-1 ){
+                board[r][c] = 'x';
+                possibleWin = checkWinner(board, r, c);
+                if(possibleWin == 1){
+                  board[r][c] = 'o'; //replace the x that triggered a win with computer's piece
+                  printBoard( board, rows, columns );
+                  printf("\n");
+                  return 0;
+                }
+                else{
+                  board[r][c] = '-';
+                }
+              }
 
                if( (r!= rows-1) && (board[r+1][c]!= '-')){
                 board[r][c] = 'x';
