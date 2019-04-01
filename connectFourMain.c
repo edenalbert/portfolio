@@ -67,7 +67,7 @@ int printMenue(){
   }
 }
 
-//This function print the game board
+//This function prints the game board
 void printBoard(char **board, int rows, int columns){
 
   for(int i=0; i<rows; i++){
@@ -97,6 +97,8 @@ void printBoard(char **board, int rows, int columns){
   return;
 }
 
+//recursive function that checks to see if there are four pieces in row
+//based off the index that was passed to it
 int inRow(char **board, int rowIndex, int colIndex, int direction, char piece){
 
   //checking to the left of piece inserted
@@ -248,6 +250,8 @@ int inRow(char **board, int rowIndex, int colIndex, int direction, char piece){
 return 0;
 }
 
+//function that calls the recursive function inRow and eventually tells main
+//if a won has been made.
 int checkWinner(char **board, int rowIndex, int colIndex){
 
   char playerPiece = board[rowIndex][colIndex];
@@ -266,6 +270,10 @@ int checkWinner(char **board, int rowIndex, int colIndex){
 
 }
 
+//Function where the users enter what column they would like to drop their piece
+//down. The computer also decides what column it wants to drop its piece down.
+//This function also calls checkWinner after a drop has made for player vs player
+//mode. And calls checkWinner when the computer is deciding where to drop its piece
 int dropAPiece(char **board, int numberOfTurns, int playMode){
   int columnDrop;
 
