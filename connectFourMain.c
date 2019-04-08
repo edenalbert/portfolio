@@ -388,7 +388,7 @@ int dropAPiece(char **board, int numberOfTurns, int playMode){
       /*next best move is taking squares in the middle
       if player 1 or computer can't win*/
       int middleCol = floor(columns/2);
-      if(board[0][(middleCol-1)] == '-'){
+      if(board[0][(middleCol-1)] == '-'){ //checking to make sure middlecol isnt full
         for( int r= (rows - 1) ; r >= 0; r-- ){
             if( board[r][middleCol] == '-' && board[r][middleCol] != 'x'){
               board[r][middleCol] = 'o';
@@ -402,7 +402,8 @@ int dropAPiece(char **board, int numberOfTurns, int playMode){
       to win, pick a random column.*/
       while(1){
         int col = (rand()%columns);
-        if(board[0][(middleCol-1)] == '-'){
+        //got rid of this if statment because its redudant
+        //if(board[0][(middleCol-1)] == '-'){
           for(int b= (rows - 1) ; b >= 0; b-- ){
             if(board[b][col]=='-' && board[b][col]!= 'x'){
               board[b][col] = 'o';
@@ -411,7 +412,7 @@ int dropAPiece(char **board, int numberOfTurns, int playMode){
               return 0;
             }
           }
-        }
+        //}
       }
     }
 
